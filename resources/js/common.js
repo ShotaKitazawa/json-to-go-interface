@@ -27,28 +27,9 @@ $(function()
 			return;
 		}
 
-		let output = jsonToGo(input, "", !$('#inline').is(':checked'), false, $('#omitempty').is(':checked'));
+		let output = jsonToGo(input, false);
 
-		if (output.error)
-		{
-			$('#output').html('<span class="clr-red">'+output.error+'</span>');
-			console.log("ERROR:", output, output.error);
-			var parsedError = output.error.match(/Unexpected token .+ in JSON at position (\d+)/);
-			if (parsedError) {
-				try {
-					var faultyIndex = parsedError.length == 2 && parsedError[1] && parseInt(parsedError[1]);
-					faultyIndex && $('#output').html(constructJSONErrorHTML(output.error, faultyIndex, input));
-				} catch(e) {}
-			}
-		}
-		else
-		{
-			var finalOutput = output.go;
-			if (typeof gofmt === 'function')
-				finalOutput = gofmt(output.go);
-			var coloredOutput = hljs.highlight("go", finalOutput);
-			$('#output').html(coloredOutput.value);
-		}
+		$('#output').html(output);
 	}
 
 	// Hides placeholder text
